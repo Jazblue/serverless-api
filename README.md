@@ -89,3 +89,36 @@ No AWS credentials are included in the repository.
 The template is environment-aware (EnvironmentName parameter).
 
 Can be extended with authentication, additional endpoints, or more AWS services.
+
+## Architecture
+
+1. **DynamoDB** – stores items with `id` as the primary key.  
+2. **Lambda Functions** – handle API requests.  
+3. **API Gateway** – routes HTTP requests to Lambda functions.  
+4. **IAM Role** – allows Lambdas to access DynamoDB and CloudWatch logs.  
+
+### Architecture Diagram
+
+          +-------------------+
+          |   API Gateway     |
+          |  /items endpoints |
+          +---------+---------+
+                    |
+          +---------v---------+
+          |     Lambda        |
+          |  (Python 3.10)   |
+          +---+-----+----+---+
+              |     |    |
+    +---------v+   v+   v---------+
+    | CreateItemLambda            |
+    | GetItemLambda               |
+    | GetAllItemsLambda           |
+    | DeleteItemLambda            |
+    +-----------------------------+
+              |
+              v
+       +--------------+
+       |  DynamoDB    |
+       |  ItemsTable  |
+       +--------------+
+
