@@ -166,6 +166,28 @@ Resources:
           - Region: !Ref "AWS::Region"
             LambdaArn: !GetAtt GetAllItemsLambda.Arn
 
+  ApiGatewayResourceItemId:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayResourceItems
+      PathPart: "{id}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId: !Ref ApiGatewayResourceItemId
+      RestApiId: !Ref ApiGatewayRestApi
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+          - Region: !Ref "AWS::Region"
+            LambdaArn: !GetAtt GetItemLambda.Arn
+
   ApiGatewayMethodCreate:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -197,6 +219,14 @@ Resources:
             LambdaArn: !GetAtt DeleteItemLambda.Arn
 
 # Lambda permissions
+  PermissionGet:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref GetItemLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/GET/items"
+
   PermissionGetAll:
     Type: AWS::Lambda::Permission
     Properties:
