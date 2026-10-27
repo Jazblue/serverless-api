@@ -68,19 +68,14 @@ Delete Item
 
 curl -X DELETE "https://<api-id>.execute-api.<region>.amazonaws.com/prod/items?id=1"
 
-Skills Demonstrated
+## Skills Demonstrated
 
-AWS Lambda & Python
-
-DynamoDB CRUD operations
-
-API Gateway integration
-
-IAM roles & permissions
-
-Infrastructure-as-code with CloudFormation
-
-Serverless best practices
+- AWS Lambda & Python
+- DynamoDB CRUD operations
+- API Gateway integration
+- IAM roles & permissions
+- Infrastructure-as-code with CloudFormation
+- Serverless best practices
 
 Notes
 
